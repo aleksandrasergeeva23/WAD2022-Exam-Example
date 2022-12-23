@@ -28,8 +28,22 @@ app.get('/api/routes/:id', async(req, res) => {
     try {
         console.log("get a post with route parameter request has arrived");
         const { id } = req.params;
+        console.log(id);
         const posts = await pool.query(
-            "SELECT * FROM routes WHERE fromcity = $1", [id]
+            "SELECT * FROM routes WHERE id = $1", [id]
+        );
+        res.json(posts.rows);
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+app.get('/api/routes/:fromcity', async(req, res) => {
+    try {
+        console.log("get a post with city parameter request has arrived");
+        const { fromcity } = req.params;
+        const posts = await pool.query(
+            "SELECT * FROM routes WHERE fromcity = $1", [fromcity]
         );
         res.json(posts.rows);
     } catch (err) {
@@ -56,7 +70,7 @@ app.put('/api/routes/:id', async(req, res) => {
         const route = req.body;
         console.log("An update request has arrived");
         const updateroute = await pool.query(
-            "UPDATE routes SET (id, fromcity, tocity, cost, departuretime, departuredate) = ($1, $2, $3, $4, $5, $6) WHERE id = $1 RETURNING*", [id, route.fromcity, route.tocity, route.cost, route.departuretime, route.departuredate]
+            "UPDATE routes SET (id, departuretime, departuredate) = ($1, $2, $3, $4, $5, $6) WHERE id = $1 RETURNING*", [id, route.fromcity, route.tocity, route.cost, route.departuretime, route.departuredate]
         );
         res.json(updateroute);
     } catch (err) {
@@ -64,12 +78,25 @@ app.put('/api/routes/:id', async(req, res) => {
     }
 });
 
+app.delete('/api/routes', async(req, res) => {
+    try {
+        console.log("delete all post request has arrived");
+        const deletepost = await pool.query(
+            "DELETE FROM routes"
+        );
+        res.json(deletepost);
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+
 app.delete('/api/routes/:id', async(req, res) => {
     try {
         const { id } = req.params;
         console.log(" A delete  request has arrived");
         const deletepost = await pool.query(
-            "DELETE FROM routes WHERE id = $1 RETURNING*", [id]
+            "DELETE * FROM routes WHERE id = $1 RETURNING*", [id]
         );
         res.json(deletepost);
     } catch (err) {
