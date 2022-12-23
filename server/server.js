@@ -70,7 +70,7 @@ app.put('/api/routes/:id', async(req, res) => {
         const route = req.body;
         console.log("An update request has arrived");
         const updateroute = await pool.query(
-            "UPDATE routes SET (id, departuretime, departuredate) = ($1, $2, $3, $4, $5, $6) WHERE id = $1 RETURNING*", [id, route.fromcity, route.tocity, route.cost, route.departuretime, route.departuredate]
+            "UPDATE routes SET (id, departuretime, departuredate) = ($1, $2, $3) WHERE id = $1 RETURNING*", [id, route.departuretime, route.departuredate]
         );
         res.json(updateroute);
     } catch (err) {
@@ -96,7 +96,7 @@ app.delete('/api/routes/:id', async(req, res) => {
         const { id } = req.params;
         console.log(" A delete  request has arrived");
         const deletepost = await pool.query(
-            "DELETE * FROM routes WHERE id = $1 RETURNING*", [id]
+            "DELETE FROM routes WHERE id = $1 RETURNING*", [id]
         );
         res.json(deletepost);
     } catch (err) {

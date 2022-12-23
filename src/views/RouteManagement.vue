@@ -31,6 +31,7 @@
             <td><input name="date" type="text" id="dateAdd" placeholder="Departure Date"  required v-model="ARoute.departuredate"></td>
     </div>
     <button class="add"  @click="addRoute(ARoute)"> Add Route </button>
+    <button class="delete"  @click="deleteAllRoutes()"> Delete All </button>
   </div>
 </template>
 
@@ -101,7 +102,20 @@ export default {
         .catch((e) => {
           console.log(e);
         });
-    }, 
+    },
+    deleteAllRoutes() {
+      fetch(`http://localhost:3000/api/routes`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((response) => {
+          //console.log(response.data);
+          this.$router.push("/routemanagement'");
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
   },
   mounted() {
     this.fetchRouts();
